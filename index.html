@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consumir API em Node.js</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Itens da API</h1>
+
+    <button id="fetch-items">Buscar Itens</button>
+
+    <div class="items-section">
+      <h2>Itens:</h2>
+      <ul id="items-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    const apiKey = '1234567890abcdef';
+
+    document.getElementById('fetch-items').addEventListener('click', () => {
+      fetchItems(apiKey);
+    });
+
+    function fetchItems(apiKey) {
+      fetch('https://d5650a36-f248-4efb-8493-fa9656b97c6d-00-xpefjo4wlnsm.picard.replit.dev/api/items', {
+        method: 'GET',
+        headers: {
+          'x-api-key': apiKey
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erro ao buscar itens: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          const itemsList = document.getElementById('items-list');
+          itemsList.innerHTML = ''; // Limpa a lista atual de itens
+          data.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.nome;
+            itemsList.appendChild(li);
+          });
+        })
+        .catch(error => alert(error.message));
+    }
+  </script>
+</body>
+
+</html>
